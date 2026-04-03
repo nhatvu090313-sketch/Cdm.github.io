@@ -3,26 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website của Nhật Vũ</title>
+    <title>In Phiếu CDM - nhatvu090313</title>
     <style>
-        body { 
-            background-color: #0d1117; 
-            color: #58a6ff; 
-            text-align: center; 
-            font-family: sans-serif; 
-            padding-top: 100px; 
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f0f2f5; }
+        .form-container { background: white; padding: 20px; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #238636; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .phieu-in { display: none; background: white; width: 80mm; padding: 5mm; border: 1px solid #000; }
+        @media print {
+            body * { display: none; }
+            .phieu-in, .phieu-in * { display: block; }
+            .phieu-in { position: absolute; left: 0; top: 0; width: 100%; border: none; }
         }
-        .card {
-            border: 1px solid #30363d;
-            background-color: #161b22;
-            display: inline-block;
-            padding: 40px;
-            border-radius: 12px;
-        }
-        h1 { color: #238636; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>XIN CHÀO! 🚀</h1>
-        
+    <div class="form-container">
+        <h2>NHẬP THÔNG TIN PHIẾU</h2>
+        <input type="text" id="ten" placeholder="Tên khách hàng">
+        <input type="text" id="noidung" placeholder="Nội dung CDM">
+        <input type="number" id="sotien" placeholder="Số tiền">
+        <button onclick="printBill()">IN PHIẾU NGAY</button>
+    </div>
+
+    <div id="printArea" class="phieu-in">
+        <center>
+            <h3>PHIẾU THU CDM</h3>
+            <p>--------------------------</p>
+        </center>
+        <p><b>Khách hàng:</b> <span id="viewTen"></span></p>
+        <p><b>Nội dung:</b> <span id="viewNoiDung"></span></p>
+        <p><b>Số tiền:</b> <span id="viewSoTien"></span> VNĐ</p>
+        <p><b>Ngày in:</b> <span id="viewNgay"></span></p>
+        <center><p>Cảm ơn quý khách!</p></center>
+    </div>
+
+    <script>
+        function printBill() {
+            document.getElementById('viewTen').innerText = document.getElementById('ten').value;
+            document.getElementById('viewNoiDung').innerText = document.getElementById('noidung').value;
+            document.getElementById('viewSoTien').innerText = Number(document.getElementById('sotien').value).toLocaleString();
+            document.getElementById('viewNgay').innerText = new Date().toLocaleString();
+            window.print();
+        }
+    </script>
+</body>
+</html>
