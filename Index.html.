@@ -2,50 +2,142 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>In Phiếu CDM - nhatvu090313</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CDM PRO V12 - FIXED</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background: #f0f2f5; }
-        .form-container { background: white; padding: 20px; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #238636; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        .phieu-in { display: none; background: white; width: 80mm; padding: 5mm; border: 1px solid #000; }
-        @media print {
-            body * { display: none; }
-            .phieu-in, .phieu-in * { display: block; }
-            .phieu-in { position: absolute; left: 0; top: 0; width: 100%; border: none; }
-        }
+        /* PHẦN 1: GIAO DIỆN (CSS) */
+        body { font-family: sans-serif; background: #f0f2f5; margin: 0; padding: 10px; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .section { background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #eee; }
+        h2 { text-align: center; color: #1a73e8; margin-bottom: 15px; text-transform: uppercase; }
+        label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 5px; color: #555; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; font-size: 15px; margin-bottom: 10px; }
+        .row { display: flex; gap: 10px; }
+        .row div { flex: 1; }
+        .btn-main { width: 100%; padding: 16px; background: #28a745; color: white; border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        
+        #previewContainer { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; overflow-y: auto; padding: 10px; }
+        .btn-group { display: flex; gap: 10px; margin-bottom: 15px; position: sticky; top: 0; background: white; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .btn-print { flex: 2; padding: 15px; background: #1a73e8; color: white; border-radius: 8px; border: none; font-weight: bold; }
+        .btn-back { flex: 1; padding: 15px; background: #6c757d; color: white; border-radius: 8px; border: none; }
+
+        @media print { .btn-group { display: none !important; } .page-break { page-break-before: always; } }
+        
+        /* Căn chỉnh bảng in thẳng hàng */
+        .print-area-wrap { font-family: 'Courier New', Courier, monospace; color: black; line-height: 1.2; }
+        .print-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .print-table td { padding: 1px 0; text-align: right; white-space: nowrap; font-size: inherit; }
+        .print-table td:nth-child(1) { text-align: left; width: 22%; }
+        .print-table td:nth-child(2) { width: 12%; }
+        .print-table td:nth-child(3) { width: 10%; }
+        .print-table td:nth-child(4), .print-table td:nth-child(5), .print-table td:nth-child(7), .print-table td:nth-child(8) { width: 8%; }
+        .print-table td:nth-child(6), .print-table td:nth-child(9) { width: 12%; }
     </style>
 </head>
 <body>
-    <div class="form-container">
-        <h2>NHẬP THÔNG TIN PHIẾU</h2>
-        <input type="text" id="ten" placeholder="Tên khách hàng">
-        <input type="text" id="noidung" placeholder="Nội dung CDM">
-        <input type="number" id="sotien" placeholder="Số tiền">
-        <button onclick="printBill()">IN PHIẾU NGAY</button>
-    </div>
 
-    <div id="printArea" class="phieu-in">
-        <center>
-            <h3>PHIẾU THU CDM</h3>
-            <p>--------------------------</p>
-        </center>
-        <p><b>Khách hàng:</b> <span id="viewTen"></span></p>
-        <p><b>Nội dung:</b> <span id="viewNoiDung"></span></p>
-        <p><b>Số tiền:</b> <span id="viewSoTien"></span> VNĐ</p>
-        <p><b>Ngày in:</b> <span id="viewNgay"></span></p>
-        <center><p>Cảm ơn quý khách!</p></center>
+<div class="container" id="mainApp">
+    <h2>CDM PRO V12</h2>
+    <div class="section">
+        <label>🏢 Tên Công ty</label>
+        <input type="text" id="compName" value="CONG TY THE KY">
     </div>
+    <div class="section">
+        <div class="row">
+            <div>
+                <label>📟 Khổ giấy</label>
+                <select id="paperType">
+                    <option value="80mm">Máy K80 (80mm)</option>
+                    <option value="58mm">Máy K58 (58mm)</option>
+                </select>
+            </div>
+            <div><label>Size chữ</label><input type="number" id="fontS" value="11"></div>
+        </div>
+    </div>
+    <div class="section">
+        <div class="row">
+            <div><label>Ngày thi công</label><input type="date" id="date"></div>
+            <div><label>Số cặp cọc in</label><input type="number" id="num" value="6"></div>
+        </div>
+        <div class="row">
+            <div><label>Giờ bắt đầu</label><input type="time" id="startT" value="07:03"></div>
+            <div><label>Chiều sâu (m)</label><input type="number" id="dep" value="3.0" step="0.1"></div>
+        </div>
+        <label>Định mức vữa (Lít/0.2m)</label>
+        <input type="number" id="rate" value="27">
+    </div>
+    <button class="btn-main" onclick="generateV12()">XUẤT PHIẾU IN CẶP</button>
+</div>
 
-    <script>
-        function printBill() {
-            document.getElementById('viewTen').innerText = document.getElementById('ten').value;
-            document.getElementById('viewNoiDung').innerText = document.getElementById('noidung').value;
-            document.getElementById('viewSoTien').innerText = Number(document.getElementById('sotien').value).toLocaleString();
-            document.getElementById('viewNgay').innerText = new Date().toLocaleString();
-            window.print();
-        }
-    </script>
+<div id="previewContainer">
+    <div class="btn-group">
+        <button class="btn-back" onclick="closePreview()">← QUAY LẠI</button>
+        <button class="btn-print" onclick="window.print()">XÁC NHẬN IN</button>
+    </div>
+    <div id="printArea" class="print-area-wrap"></div>
+</div>
+
+<script>
+    window.onload = function() { document.getElementById('date').valueAsDate = new Date(); };
+
+    function generateV12() {
+        try {
+            const comp = document.getElementById('compName').value.toUpperCase();
+            const pW = document.getElementById('paperType').value;
+            const fS = document.getElementById('fontS').value + "px";
+            const depth = parseFloat(document.getElementById('dep').value);
+            const rateBase = parseFloat(document.getElementById('rate').value);
+            const dateStr = document.getElementById('date').value.split('-').reverse().join('/');
+            const numPairs = parseInt(document.getElementById('num').value) || 1; 
+
+            let startTime = new Date();
+            const [h, m] = document.getElementById('startT').value.split(':').map(Number);
+            startTime.setHours(h, m, 0);
+
+            let fullHtml = "";
+            let contentWidth = (pW === '58mm') ? '54mm' : '76mm';
+
+            for (let p = 0; p < numPairs; p++) {
+                let p1 = (p * 2 + 1).toString().padStart(2, '0');
+                let p2 = (p * 2 + 2).toString().padStart(2, '0');
+                
+                let html = `<div class="${p > 0 ? 'page-break' : ''}" style="width:${contentWidth}; margin:10px auto; font-size:${fS};">`;
+                
+                // Căn lề trái
+                html += `<div style="text-align: left;"><b>${comp}</b><br>Coc so: ${p1} & ${p2}<br>Ngay: ${dateStr}</div><br>`;
+                html += `<div style="white-space: pre; text-align: left;">HH:MM:SS MET M/P LP1 L1 TL1 LP2 L2 TL2</div>`;
+                html += `------------------------------------------<br><table class="print-table">`;
+
+                let tl1 = 0, tl2 = 0;
+                // Xuống (Sai số tự nhiên)
+                for (let d = 0.2; d <= depth; d = parseFloat((d + 0.2).toFixed(2))) {
+                    startTime.setSeconds(startTime.getSeconds() + 20);
+                    let l1 = rateBase + (Math.random() < 0.3 ? Math.floor(Math.random() * 2) : 0);
+                    let l2 = rateBase + (Math.random() < 0.3 ? Math.floor(Math.random() * 2) : 0);
+                    tl1 += l1; tl2 += l2;
+                    html += `<tr><td>${startTime.toLocaleTimeString('en-GB')}</td><td>${d.toFixed(2)}</td><td>0.6</td><td>81</td><td>${l1}</td><td>${tl1}</td><td>81</td><td>${l2}</td><td>${tl2}</td></tr>`;
+                }
+
+                // Lên
+                for (let d = parseFloat((depth - 0.2).toFixed(2)); d >= 0; d = parseFloat((d - 0.2).toFixed(2))) {
+                    startTime.setSeconds(startTime.getSeconds() + 10);
+                    html += `<tr><td>${startTime.toLocaleTimeString('en-GB')}</td><td>${d.toFixed(2)}</td><td>1.2</td><td>81</td><td>0</td><td>${tl1}</td><td>81</td><td>0</td><td>${tl2}</td></tr>`;
+                }
+                html += `</table>------------------------------------------<br><div style="text-align: left;">Ket thuc: ${startTime.toLocaleTimeString('en-GB')}</div></div>`;
+                fullHtml += html;
+                startTime.setMinutes(startTime.getMinutes() + 10); 
+            }
+
+            document.getElementById('printArea').innerHTML = fullHtml;
+            document.getElementById('previewContainer').style.display = 'block';
+            document.getElementById('mainApp').style.display = 'none';
+        } catch (e) { alert("Lỗi dữ liệu đầu vào!"); }
+    }
+
+    function closePreview() {
+        document.getElementById('previewContainer').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+    }
+</script>
 </body>
 </html>
