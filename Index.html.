@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website của Nhật Vũ</title>
+    <style>
+        body { 
+            background-color: #0d1117; 
+            color: #58a6ff; 
+            text-align: center; 
+            font-family: sans-serif; 
+            padding-top: 100px; 
+        }
+        .card {
+            border: 1px solid #30363d;
+            background-color: #161b22;
+            display: inline-block;
+            padding: 40px;
+            border-radius: 12px;
+        }
+        h1 { color: #238636; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>XIN CHÀO! 🚀</h1>
+        
